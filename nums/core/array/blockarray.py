@@ -125,12 +125,14 @@ class BlockArray(BlockArrayBase):
         self.system.get(oids)
         return self
 
-    def reshape(self, shape=None, **kwargs):
+    def reshape(self, *shape, **kwargs):
         block_shape = kwargs.get("block_shape", None)
         if array_utils.is_int(shape):
             shape = (shape,)
-        elif shape is None:
+        elif len(shape) == 0:
             shape = self.shape
+        elif len(shape) == 1 and isinstance(shape[0], (tuple, list)):
+            shape = shape[0]
         shape = Reshape.compute_shape(self.shape, shape)
         if block_shape is None:
             if shape == self.shape:
